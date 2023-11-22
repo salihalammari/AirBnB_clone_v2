@@ -1,22 +1,21 @@
 #!/usr/bin/python3
-"""Console"""
-import re
-import os
+""" Console Module """
+import cmd
 import sys
-import uuid
-from shlex import split
-from models import storage
 from models.base_model import BaseModel
+from models.__init__ import storage
 from models.user import User
+from models.place import Place
 from models.state import State
 from models.city import City
-from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
 
-class HBNBCommand(cmd.Cmd):
-    """Defines the HolbertonBnB command interpreter."""
 
+class HBNBCommand(cmd.Cmd):
+    """ Contains the functionality for the HBNB console"""
+
+    # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
