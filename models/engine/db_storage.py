@@ -48,19 +48,19 @@ class DBStorage:
         key = <class-name>.<object-id>
         value = object
         '''
-        dcts = {}
+        dct = {}
         if cls is None:
             for c in classes.values():
                 objs = self.__session.query(c).all()
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
-                    dcts[key] = obj
+                    dct[key] = obj
         else:
             objs = self.__session.query(cls).all()
             for obj in objs:
                 key = obj.__class__.__name__ + '.' + obj.id
-                dcts[key] = obj
-        return dcts
+                dct[key] = obj
+        return dct
 
     def new(self, obj):
         '''adds the obj to the current db session'''
@@ -93,5 +93,5 @@ class DBStorage:
         self.__session = scoped_session(session_factory)()
 
     def close(self):
-        """closes SQLAlchemy session"""
+        """closes the working SQLAlchemy session"""
         self.__session.close()
