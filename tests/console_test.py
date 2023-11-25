@@ -1,29 +1,21 @@
 #!/usr/bin/python3
 """test module for the console"""
-
-import json
-import MySQLdb
 import os
-import sqlalchemy
 import unittest
 from io import StringIO
 from unittest.mock import patch
-
+import MySQLdb
+import sqlalchemy
 from console import HBNBCommand
 from models import storage
-from models.base_model import BaseModel
 from models.user import User
 from tests import clear_stream
 
-
 class TestHBNBCommand(unittest.TestCase):
-    """Represents the test class for the HBNBCommand class.
-    """
-    @unittest.skipIf(
-        os.getenv('HBNB_TYPE_STORAGE') == 'db', 'FileStorage test')
+    """Represents the test class for the HBNBCommand class."""
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', 'FileStorage test')
     def test_fs_create(self):
-        """Tests the create command with the file storage.
-        """
+        """Tests the create command with the file storage."""
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             cons.onecmd('create City name="Safi"')
@@ -41,11 +33,10 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn("'name': 'sherpa'", cout.getvalue().strip())
             self.assertIn("'age': 27", cout.getvalue().strip())
             self.assertIn("'height': 5.5", cout.getvalue().strip())
-    @unittest.skipIf(
-        os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
+
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
     def test_db_create(self):
-        """Tests the create command with the database storage.
-        """
+        """Tests the create command with the database storage."""
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             with self.assertRaises(sqlalchemy.exc.OperationalError):
@@ -69,11 +60,9 @@ class TestHBNBCommand(unittest.TestCase):
             cursor.close()
             dbc.close()
 
-    @unittest.skipIf(
-        os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
     def test_db_show(self):
-        """Tests the show command with the database storage.
-        """
+        """Tests the show command with the database storage."""
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             # showing a User instance
@@ -95,14 +84,6 @@ class TestHBNBCommand(unittest.TestCase):
                 '** no instance found **'
             )
             obj.save()
-            dbc = MySQLdb.connect(
-                host=os.getenv('HBNB_MYSQL_HOST'),
-                port=3306,
-                user=os.getenv('HBNB_MYSQL_USER'),
-                passwd=os.getenv('HBNB_MYSQL_PWD'),
-                db=os.getenv('HBNB_MYSQL_DB')
-            )
-            cursor = dbc.cursor()
             cursor.execute('SELECT * FROM users WHERE id="{}"'.format(obj.id))
             clear_stream(cout)
             cons.onecmd('show User {}'.format(obj.id))
@@ -115,11 +96,9 @@ class TestHBNBCommand(unittest.TestCase):
             cursor.close()
             dbc.close()
 
-    @unittest.skipIf(
-        os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db', 'DBStorage test')
     def test_db_count(self):
-        """Tests the count command with the database storage.
-        """
+        """Tests the count command with the database storage."""
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             dbc = MySQLdb.connect(
